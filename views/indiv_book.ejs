@@ -3,11 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title>Individual Books</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  
+  <link rel="stylesheet" href="/style_sheets/style.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div class="navbar navbar-default">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="btn-group" role="group">
+          <a href="/"><button type="button" class="btn btn-default">Home</button></a>
+          <a href="/about"><button type="button" class="btn btn-default">About</button></a>
+          <a href="/contact"><button type="button" class="btn btn-default">Contact</button></a>
+          <a href="/new_books"><button type="button" class="btn btn-default">New Books</button></a>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>
+<!-- style using a table -->
   <h1>Individual books</h1>
-  <td> <%= books.name %> </td>
-  <td> <%= books.name %></td>
+  <td> <%= books.title %> </td>
+  <td> <%= books.author %></td>
   <td> <%= books.img %></td>
 </body>
 </html>

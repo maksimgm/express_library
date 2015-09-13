@@ -11,16 +11,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 
+var morgan = require("morgan");
+app.use(morgan('dev'));
+
 var arrBooks = [];
 
 var counter = 0;
 
-function BookList(name, author, id, img){
-  this.name = name;
+var BookList = function (title, author, id, img){
+  this.title = title;
   this.author = author;
   this.id = id;
   this.img = img;
-}
+};
 
 // renders page with existing books
 app.get("/",function(req,res){
@@ -28,28 +31,64 @@ app.get("/",function(req,res){
   res.render("index",{books: arrBooks});
 });
 
+app.get("/modify/:id",function(req,res){
+  var bookId = parseInt(req.params.id);
+
+  var specificBook = arrBooks[bookId];
+  console.log("APP.GET", specificBook, bookId);
+  res.render("modifyBook",{books:specificBook});
+  // res.render("modifyBook");
+});
+
+app.put("/modify/:id",function(req,res){
+    //remove req.param.id from array
+    //return to "/"
+  var bookTitle = req.body.title;
+  var bookAuthor = req.body.author;
+  var bookImg = req.body.img;
+  arrBooks[req.params.id] = new BookList(bookTitle,bookAuthor,req.params.id, bookImg);
+  // arrBooks.push(Book); 
+  // console.log("should have", bookTitle,bookAuthor,bookImg);
+  // console.log(req);
+
+  // console.log("Shoulve modified:", req.params.id);
+  res.redirect("/");
+});
+
+app.delete("/kill/:id",function(req,res){
+  // var bookTitle = req.body.title;
+  // var bookAuthor = req.body.author;
+  // var bookImg = req.body.img;
+  // Book = new BookList(bookTitle,bookAuthor,counter++, bookImg);
+  arrBooks.splice(req.params.id,1);
+  console.log("ARRBOOKS",arrBooks);
+  res.redirect("/");
+});
+
 // adds a new book to the array
 app.post("/library",function(req,res){
-  var newBookName = req.body.name;
-  var newBookAuthor = req.body.author;
-  var newBookImg = req.body.img;
-  Book = new BookList(newBookName,newBookAuthor,counter++, newBookImg);
+  
+  var bookTitle = req.body.title;
+  var bookAuthor = req.body.author;
+  var bookImg = req.body.img;
+  Book = new BookList(bookTitle,bookAuthor,counter++, bookImg);
   arrBooks.push(Book);
+  console.log("ARRBOOKS",arrBooks);
   res.redirect("/");
+});
+
+app.get("/new_books",function(req,res){
+  res.render("new_books");
 });
 
 // look up individual books by their assigned id.
 // id assignment uses a counter.
 app.get("/books/:id",function(req,res){
-  var pupId = parseInt(req.params.id);
-  var specificBook = arrBooks[pupId];
-  res.render("indiv_book",{books:arrBooks});
+  var bookId = parseInt(req.params.id);
+  var specificBook = arrBooks[bookId];
+  res.render("indiv_book",{books:specificBook});
 });
 
-
-app.get("/new_books",function(req,res){
-  res.render("new_books");
-});
 
 app.listen(3000,function(){
   console.log("Got to localhost:3000/");

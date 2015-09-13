@@ -2,21 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>New Books</title>
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-  
-  <link rel="stylesheet" href="/style_sheets/style.css">
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <title>Modify</title>
 </head>
 <body>
-<div class="navbar navbar-default">
+  <div class="navbar navbar-default">
   <div class="container">
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
@@ -30,8 +19,8 @@
     </div>
   </div>  
 </div>
-  <h1>New Books!!!</h1>
-  <form action="/library" method="POST">
+  <h1>Modify Book</h1>
+  <form action="/modify/<%= books.id%>?_method=put" method="POST">
     <p>
       <label for="name">Title:</label>
       <input type="text" required id="name" name="title">

@@ -3,13 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <title>Index</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  
+  <link rel="stylesheet" href="/style_sheets/style.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <h1>It is working</h1>
-  <% books.forEach(function(book){ %>
-  <td> <%= book.name %> </td>
-  <td> <%= book.author %> </td>
-  <td> <%= book.img %> </td>
-  <% }); %>
+<div class="navbar navbar-default">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="btn-group" role="group">
+          <a href="/"><button type="button" class="btn btn-default">Home</button></a>
+          <a href="/about"><button type="button" class="btn btn-default">About</button></a>
+          <a href="/contact"><button type="button" class="btn btn-default">Contact</button></a>
+          <a href="/new_books"><button type="button" class="btn btn-default">New Books</button></a>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-4 col-xs-offset-4">
+      <h1 class="text-center">Books</h1>
+    </div>  
+  </div>
+  <div class="row">
+    <div class="col-xs-4 col-xs-offset-4">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td><strong>Title:</strong></td>
+            <td><strong>Author:</strong></td>
+            <td><strong>Image URL:</strong></td>
+            <td><strong>Alter:</strong></td>
+            <td><strong>Delete:</strong></td>
+          </tr>
+        </thead> 
+        <tbody>
+          <% books.forEach(function(book){ %>
+          <tr class="info">
+            <td> <%= book.title %> </td>
+            <td> <%= book.author %> </td>
+            <td> <%= book.img %> </td>
+           <!--  <td>
+              <form action="/modify/<%= book.id%>?_ " method="GET">
+              <label for="change">alter</label>
+              <button type="button btn-default btn-succes" id="change"></button>
+            </td> -->
+            <td>
+              <form action="/kill/<%= book.id%>?_method=delete" method="POST">
+              <label for="delete">delete</label>
+              <button type="button btn-default btn-succes" id="delete"></button>
+            </td>
+            <% }) %>
+          </tr>
+        </tbody>
+        </form>
+      </table>
+    </div>
+  </div>
+</div>
 </body>
 </html>
