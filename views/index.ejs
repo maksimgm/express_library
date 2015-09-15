@@ -55,7 +55,7 @@
             <td> <%= book.author %> </td>
             <td> <%= book.img %> </td>
             <td>
-              <form action="/modify/<%= book.id%>?_ " method="GET">
+              <form action="/modify/<%= book.id%>?_method=put" method="GET">
                 <label for="change">alter</label>
                 <button type="button btn-default btn-succes" id="change"></button>
               </form>

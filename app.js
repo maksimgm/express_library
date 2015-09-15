@@ -46,7 +46,7 @@ app.put("/modify/:id",function(req,res){
   var bookTitle = req.body.title;
   var bookAuthor = req.body.author;
   var bookImg = req.body.img;
-  arrBooks[req.params.id] = new BookList(bookTitle,bookAuthor,req.params.id, bookImg);
+  arrBooks[parseInt(req.params.id)] = new BookList(bookTitle,bookAuthor,req.params.id, bookImg);
   // arrBooks.push(Book); 
   // console.log("should have", bookTitle,bookAuthor,bookImg);
   // console.log(req);
@@ -60,7 +60,11 @@ app.delete("/kill/:id",function(req,res){
   // var bookAuthor = req.body.author;
   // var bookImg = req.body.img;
   // Book = new BookList(bookTitle,bookAuthor,counter++, bookImg);
-  arrBooks.splice(req.params.id,1);
+  arrBooks.forEach(function(book){
+    if(book.id === Number(req.params.id)){
+      arrBooks.splice(arrBooks.indexOf(book),1);
+    }
+  });
   console.log("ARRBOOKS",arrBooks);
   res.redirect("/");
 });
