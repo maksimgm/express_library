@@ -14,8 +14,6 @@ app.use(methodOverride('_method'));
 var db = require("./models");
 
 
-var arrBooks = [];
-
 app.get("/",function(req,res){
   db.Book.find({},function(err,books){
     if(err){
