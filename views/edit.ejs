@@ -20,18 +20,18 @@
   </div>  
 </div>
   <h1>Modify Book</h1>
-  <form action="/modify/<%= books.id%>?_method=put" method="POST">
+  <form action="/books/<%= book.id%>?_method=put" method="POST">
     <p>
       <label for="name">Title:</label>
-      <input type="text" required id="name" name="title">
+      <input type="text" required id="name" name="book[title]" value="<%= book.title %>">
     </p>
     <p>
       <label for="author">Author:</label>
-      <input type="text" required id="author" name="author">
+      <input type="text" required id="author" name="book[author]" value="<%= book.author %>">
     </p>
     <p>
       <label for="image">Image URL:</label>
-      <input type="text" id="image" name="img">
+      <input type="text" id="image" name="book[img]"  value="<%= book.img %>">
     </p>
     <p>
       <input type="submit">

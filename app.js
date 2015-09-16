@@ -11,86 +11,76 @@ app.use(bodyParser.urlencoded({extended: true}));
 var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 
-var morgan = require("morgan");
-app.use(morgan('dev'));
+var db = require("./models");
+
 
 var arrBooks = [];
 
-var counter = 0;
-
-var BookList = function (title, author, id, img){
-  this.title = title;
-  this.author = author;
-  this.id = id;
-  this.img = img;
-};
-
-// renders page with existing books
 app.get("/",function(req,res){
-
-  res.render("index",{books: arrBooks});
+  db.Book.find({},function(err,books){
+    if(err){
+      res.render("404");
+      // have an error page .ejs
+    } else {
+      res.render('index', {books:books});
+    }
+  });
+  // res.render("index",{books: arrBooks});
 });
 
-app.get("/modify/:id",function(req,res){
-  var bookId = parseInt(req.params.id);
-
-  var specificBook = arrBooks[bookId];
-  console.log("APP.GET", specificBook, bookId);
-  res.render("modifyBook",{books:specificBook});
-  // res.render("modifyBook");
+app.get("/books/:id/edit/",function(req,res){
+  db.Book.findById(req.params.id, function(err, book){
+    if(err){
+      res.render("404");
+    } else {
+      res.render('edit', {book:book});
+    }
+  });
 });
 
-app.put("/modify/:id",function(req,res){
-    //remove req.param.id from array
-    //return to "/"
-  var bookTitle = req.body.title;
-  var bookAuthor = req.body.author;
-  var bookImg = req.body.img;
-  arrBooks[parseInt(req.params.id)] = new BookList(bookTitle,bookAuthor,req.params.id, bookImg);
-  // arrBooks.push(Book); 
-  // console.log("should have", bookTitle,bookAuthor,bookImg);
-  // console.log(req);
-
-  // console.log("Shoulve modified:", req.params.id);
-  res.redirect("/");
+app.put("/books/:id",function(req,res){
+  db.Book.findByIdAndUpdate(req.params.id,req.body.book,function(err,book){
+    if (err) {
+      res.render("404");
+    }else {
+      res.redirect("/");
+    }
+  });
 });
 
 app.delete("/kill/:id",function(req,res){
-  // var bookTitle = req.body.title;
-  // var bookAuthor = req.body.author;
-  // var bookImg = req.body.img;
-  // Book = new BookList(bookTitle,bookAuthor,counter++, bookImg);
-  arrBooks.forEach(function(book){
-    if(book.id === Number(req.params.id)){
-      arrBooks.splice(arrBooks.indexOf(book),1);
+  db.Book.findByIdAndRemove(req.params.id, function(err,book){
+    if(err){
+      res.render("404");
+    }else{
+      res.redirect("/");
     }
   });
-  console.log("ARRBOOKS",arrBooks);
-  res.redirect("/");
 });
 
-// adds a new book to the array
 app.post("/library",function(req,res){
-  
-  var bookTitle = req.body.title;
-  var bookAuthor = req.body.author;
-  var bookImg = req.body.img;
-  Book = new BookList(bookTitle,bookAuthor,counter++, bookImg);
-  arrBooks.push(Book);
-  console.log("ARRBOOKS",arrBooks);
-  res.redirect("/");
+  db.Book.create(req.body.book,function(err,book){
+    if(err){
+      var errorText = "Title can't be blank";
+      res.render("new", {error: errorText});
+    } else {
+      res.redirect("/");
+    }
+  });
 });
 
-app.get("/new_books",function(req,res){
-  res.render("new_books");
+app.get("/new",function(req,res){
+  res.render("new");
 });
 
-// look up individual books by their assigned id.
-// id assignment uses a counter.
 app.get("/books/:id",function(req,res){
-  var bookId = parseInt(req.params.id);
-  var specificBook = arrBooks[bookId];
-  res.render("indiv_book",{books:specificBook});
+  db.Book.findById(req.params.id, function(err, foundBook){
+    if(err){
+      res.render("404");
+    } else {
+      res.render('show', {book:foundBook});
+    }
+  });
 });
 
 

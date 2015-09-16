@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>New Books</title>
+  <title>Individual Books</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   
@@ -24,29 +24,16 @@
           <a href="/"><button type="button" class="btn btn-default">Home</button></a>
           <a href="/about"><button type="button" class="btn btn-default">About</button></a>
           <a href="/contact"><button type="button" class="btn btn-default">Contact</button></a>
-          <a href="/new_books"><button type="button" class="btn btn-default">New Books</button></a>
+          <a href="/new"><button type="button" class="btn btn-default">New Books</button></a>
         </div>
       </div>
     </div>
   </div>  
 </div>
-  <h1>New Books!!!</h1>
-  <form action="/library" method="POST">
-    <p>
-      <label for="name">Title:</label>
-      <input type="text" required id="name" name="title">
-    </p>
-    <p>
-      <label for="author">Author:</label>
-      <input type="text" required id="author" name="author">
-    </p>
-    <p>
-      <label for="image">Image URL:</label>
-      <input type="text" id="image" name="img">
-    </p>
-    <p>
-      <input type="submit">
-    </p>
-  </form>
+<!-- style using a table -->
+  <h1>Individual books</h1>
+  <td> <%= book.title %> </td>
+  <td> <%= book.author %></td>
+  <td> <%= book.img %></td>
 </body>
 </html>
