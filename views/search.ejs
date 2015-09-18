@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Result</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  
+  <link rel="stylesheet" href="/style_sheets/style.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="navbar navbar-default">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="btn-group" role="group">
+          <a href="/"><button type="button" class="btn btn-default">Home</button></a>
+          <a href="/new"><button type="button" class="btn btn-default">New Books</button></a>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <form action="/search">
+          <label for="search" method="GET">Search:</label>
+          <input type="text" id="search" name="search">
+          <input type="submit">
+        </form>
+      </div>
+    </div>
+  </div>  
+</div>
+  <div class="col-xs-6 col-xs-offset-3">
+   <%bookData.forEach(function(results){%>
+    <form action="/library" method="POST">
+     <div name="book[title]" value="<%results.volumeInfo.title%>"><%=results.volumeInfo.title%></div>
+     <div name="book[author]" value="<%results.volumeInfo.authors[0]%>"><%=results.volumeInfo.authors[0]%></div>
+     <div name="book[year]" value="<%results.volumeInfo.publishedDate%>" ><%=results.volumeInfo.publishedDate%></div>
+     <div name="book[isbn]" value="<%results.volumeInfo.industryIdentifiers[0].identifier%>" ><%=results.volumeInfo.industryIdentifiers[0].identifier%></div>
+      <label for="buy"></label>
+      <button type="button btn-default btn-success" id="buy">Buy Book</button>
+    </form>
+   <%})%>
+  </div>
+</body>
+</html>

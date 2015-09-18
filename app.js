@@ -13,6 +13,16 @@ app.use(methodOverride('_method'));
 
 var db = require("./models");
 
+var request = require('request');
+
+
+var url = "https://www.googleapis.com/books/v1/volumes?q=";
+
+var options ={
+  uri:url,
+  method:"POST",
+  // json:data
+};
 
 app.get("/",function(req,res){
   db.Book.find({},function(err,books){
@@ -23,8 +33,24 @@ app.get("/",function(req,res){
       res.render('index', {books:books});
     }
   });
+  // var bookData = JSON.parse(body);
   // res.render("index",{books: arrBooks});
 });
+
+
+app.get("/search",function(req,res){
+  request.get(url+ req.query.search, function(error,response,body){
+    if(!error && response.statusCode === 200){
+      var bookData = JSON.parse(body);
+      console.log(bookData);
+      console.log(results);
+      var results = "Title: " +bookData.items[0].volumeInfo.title + "<br>" + "Author: " +bookData.items[0].volumeInfo.authors[0]+ "<br>"+ "Year: "+ bookData.items[0].volumeInfo.publishedDate+ "<br>"+ "ISBN: "+ bookData.items[0].volumeInfo.industryIdentifiers[0].identifier;
+      res.render("search",{bookData:bookData.items});
+    }
+  });
+});
+
+
 
 app.get("/books/:id/edit/",function(req,res){
   db.Book.findById(req.params.id, function(err, book){
@@ -32,6 +58,16 @@ app.get("/books/:id/edit/",function(req,res){
       res.render("404");
     } else {
       res.render('edit', {book:book});
+    }
+  });
+});
+
+app.get("/books/:id",function(req,res){
+  db.Book.findById(req.params.id, function(err, foundBook){
+    if(err){
+      res.render("404");
+    } else {
+      res.render('show', {book:foundBook});
     }
   });
 });
@@ -56,12 +92,19 @@ app.delete("/kill/:id",function(req,res){
   });
 });
 
+// app.post("/",function(req,res){
+//   db.Book.create(req.body.,function(err,book){
+
+//   });
+// });
+
 app.post("/library",function(req,res){
   db.Book.create(req.body.book,function(err,book){
     if(err){
       var errorText = "Title can't be blank";
       res.render("new", {error: errorText});
     } else {
+      console.log(book);
       res.redirect("/");
     }
   });
@@ -71,15 +114,6 @@ app.get("/new",function(req,res){
   res.render("new");
 });
 
-app.get("/books/:id",function(req,res){
-  db.Book.findById(req.params.id, function(err, foundBook){
-    if(err){
-      res.render("404");
-    } else {
-      res.render('show', {book:foundBook});
-    }
-  });
-});
 
 
 app.listen(3000,function(){
