@@ -35,17 +35,23 @@
     </div>
   </div>  
 </div>
-  <div class="col-xs-6 col-xs-offset-3">
+<div class="container">
+<div class="row">
+  <div class="col-xs-6">
    <%bookData.forEach(function(results){%>
-    <form action="/library" method="POST">
-     <div name="book[title]" value="<%results.volumeInfo.title%>"><%=results.volumeInfo.title%></div>
-     <div name="book[author]" value="<%results.volumeInfo.authors[0]%>"><%=results.volumeInfo.authors[0]%></div>
-     <div name="book[year]" value="<%results.volumeInfo.publishedDate%>" ><%=results.volumeInfo.publishedDate%></div>
-     <div name="book[isbn]" value="<%results.volumeInfo.industryIdentifiers[0].identifier%>" ><%=results.volumeInfo.industryIdentifiers[0].identifier%></div>
-      <label for="buy"></label>
-      <button type="button btn-default btn-success" id="buy">Buy Book</button>
-    </form>
+     <div><%=results.volumeInfo.title%></div>
+     <div><%=results.volumeInfo.authors[0]%></div>
+     <div><%=results.volumeInfo.publishedDate%></div>
+     <div><%=results.volumeInfo.industryIdentifiers[0].identifier%></div>
+   <form action="/library" method="POST">
+    <input type="submit" value="Buy">
+    <input type="hidden" name="book[title]" value="<%=bookData[0].volumeInfo.title%>">
+    <input type="hidden" name="book[author]" value="<%=bookData[0].volumeInfo.authors[0]%>">
+    <input type="hidden" name="book[year]" value="<%=bookData[0].volumeInfo.publishedDate%>" >
+   </form>
    <%})%>
+   </div>
+    </div>
   </div>
 </body>
 </html>
