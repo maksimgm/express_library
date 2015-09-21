@@ -3,26 +3,26 @@ var express = require("express"),
 
 app.set("view engine", "ejs");
 
-app.use(express.static(__dirname+"/public"));
-
 var bodyParser = require("body-parser");
+var methodOverride = require('method-override');
+var db = require("./models");
+var request = require('request');
+var session = require("cookie-session");
+var loginMiddleware = require("./middleware/loginHelper");
+var routeMiddleware = require("./middleware/routeHelper");
+var session = require("cookie-session");
+
+app.use(express.static(__dirname+"/public"));
+app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
 
-var methodOverride = require('method-override');
-app.use(methodOverride('_method'));
-
-var db = require("./models");
-
-var request = require('request');
-
+app.use(session({
+  maxAge: 3600000,
+  secret: 'illnevertell',
+  name: "chocolate chip"
+}));
 
 var url = "https://www.googleapis.com/books/v1/volumes?q=";
-
-var options ={
-  uri:url,
-  method:"POST",
-  // json:data
-};
 
 app.get("/",function(req,res){
   db.Book.find({},function(err,books){
