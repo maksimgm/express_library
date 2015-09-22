@@ -15,6 +15,7 @@ var session = require("cookie-session");
 app.use(express.static(__dirname+"/public"));
 app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(loginMiddleware);
 
 app.use(session({
   maxAge: 3600000,
@@ -24,7 +25,44 @@ app.use(session({
 
 var url = "https://www.googleapis.com/books/v1/volumes?q=";
 
-app.get("/",function(req,res){
+app.get("/login", routeMiddleware.preventLoginSignup, function (req, res) {
+  res.render("users/login");
+});
+
+app.post("/login", function (req, res) {
+  db.User.authenticate(req.body.user,
+  function (err, user) {
+    if (!err && user !== null) {
+      console.log("BEFORE!!");
+      req.login(user);
+      res.redirect("/");
+    } else {
+      console.log("AFTER!!");
+      // TODO - handle errors in ejs!
+      res.render("users/login");
+    }
+  });
+});
+
+app.get('/signup', routeMiddleware.preventLoginSignup ,function(req,res){
+  res.render('users/signup');
+});
+
+app.post("/signup", function (req, res) {
+  var newUser = req.body.user;
+  db.User.create(newUser, function (err, user) {
+    if (user) {
+      req.login(user);
+      res.redirect("/");
+    } else {
+      console.log(err);
+      // TODO - handle errors in ejs!
+      res.render("users/signup");
+    }
+  });
+});
+
+app.get("/", routeMiddleware.ensureLoggedIn, function(req,res){
   db.Book.find({},function(err,books){
     if(err){
       res.render("404");
@@ -33,12 +71,9 @@ app.get("/",function(req,res){
       res.render('index', {books:books});
     }
   });
-  // var bookData = JSON.parse(body);
-  // res.render("index",{books: arrBooks});
 });
 
-
-app.get("/search",function(req,res){
+app.get("/search", routeMiddleware.ensureLoggedIn, function(req,res){
   request.get(url+ req.query.search, function(error,response,body){
     if(!error && response.statusCode === 200){
       var bookData = JSON.parse(body);
@@ -52,7 +87,7 @@ app.get("/search",function(req,res){
 
 
 
-app.get("/books/:id/edit/",function(req,res){
+app.get("/books/:id/edit/",routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUser,function(req,res){
   db.Book.findById(req.params.id, function(err, book){
     if(err){
       res.render("404");
@@ -62,7 +97,7 @@ app.get("/books/:id/edit/",function(req,res){
   });
 });
 
-app.get("/books/:id",function(req,res){
+app.get("/books/:id", routeMiddleware.ensureLoggedIn, function(req,res){
   db.Book.findById(req.params.id, function(err, foundBook){
     if(err){
       res.render("404");
@@ -72,7 +107,7 @@ app.get("/books/:id",function(req,res){
   });
 });
 
-app.put("/books/:id",function(req,res){
+app.put("/books/:id", routeMiddleware.ensureLoggedIn, function(req,res){
   db.Book.findByIdAndUpdate(req.params.id,req.body.book,function(err,book){
     if (err) {
       res.render("404");
@@ -82,7 +117,7 @@ app.put("/books/:id",function(req,res){
   });
 });
 
-app.delete("/kill/:id",function(req,res){
+app.delete("/kill/:id", routeMiddleware.ensureLoggedIn, function(req,res){
   db.Book.findByIdAndRemove(req.params.id, function(err,book){
     if(err){
       res.render("404");
@@ -92,11 +127,6 @@ app.delete("/kill/:id",function(req,res){
   });
 });
 
-// app.post("/",function(req,res){
-//   db.Book.create(req.body.,function(err,book){
-
-//   });
-// });
 
 app.post("/library",function(req,res){
   db.Book.create(req.body.book,function(err,book){
@@ -114,7 +144,10 @@ app.get("/new",function(req,res){
   res.render("new");
 });
 
-
+app.get("/logout", function (req, res) {
+  req.logout();
+  res.redirect("/");
+});
 
 app.listen(3000,function(){
   console.log("Got to localhost:3000/");
